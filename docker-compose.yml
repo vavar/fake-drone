@@ -1,0 +1,59 @@
+version: "3"
+services:
+  db:
+    image: influxdb:latest
+    volumes:
+      - db-data:/var/lib/influxdb
+    networks:
+      - backend
+    environment:
+      - INFLUXDB_DB=fake-drone
+    ports: 
+      - "8086:8086"
+  db-admin:
+    image: chronograf:latest
+    depends_on:
+      - db
+    networks:
+      - backend
+    ports: 
+      - "8888:8888"
+    environment:
+      - INFLUXDB_URL=http://db:8086
+  server:
+    image: node:8
+    working_dir: /usr/src/app
+    command: ["npm","run","docker"]
+    depends_on:
+      - db-admin
+    ports: 
+      - "8081:8081"
+    networks:
+      - backend
+      - frontend
+    environment:
+      - PORT=8081
+      - DB_URL=http://db:8086
+      - DB_HOST=db
+      - DB_NAME=drones
+    volumes:
+      - ./server:/usr/src/app
+  web:
+    image: node:8
+    working_dir: /usr/src/app
+    command: ["npm","start"]
+    depends_on:
+      - server
+    networks:
+      - frontend
+    ports: 
+      - "3000:3000"
+    volumes:
+      - ./web:/usr/src/app
+
+networks:
+  frontend:
+  backend:
+
+volumes:
+  db-data:

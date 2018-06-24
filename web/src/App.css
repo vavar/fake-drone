@@ -1,0 +1,17 @@
+.App {
+  text-align: center;
+}
+
+.drone-name {
+  display: flex;
+  margin: auto;
+  padding: 10px;
+  border: 1px solid #999;
+}
+
+.new-command {
+  display: flex;
+  margin: auto;
+  padding: 10px;
+  border-bottom: 1px solid #999;
+}
