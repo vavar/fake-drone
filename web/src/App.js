@@ -6,11 +6,11 @@ import { gridX, commands, directions, ENTER_KEY} from './constants';
 
 import { library } from '@fortawesome/fontawesome-svg-core' // eslint-disable-next-line
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' 
-import { faPlane } from '@fortawesome/free-solid-svg-icons'
+import { faPlane, faListAlt, faKeyboard } from '@fortawesome/free-solid-svg-icons'
 
 import './App.css';
 
-library.add(faPlane);
+library.add(faPlane, faListAlt, faKeyboard);
 
 function isValidCommand(command) {
   return _.includes(commands, command);
@@ -28,6 +28,7 @@ function getQueryString(params) {
   if (x === -1 || y === -1 || f === -1) {
     return Promise.reject(new Error('invalid argument for PLACE command'));
   }
+  console.log('');
   return Promise.resolve(`?${queryString.stringify({x,y,f})}`);
 }
 
@@ -114,18 +115,17 @@ class App extends Component {
     return (
       <div className='App'>
         <div className='drone-name'>
-          <label htmlFor='droneName'>Fake Drone Name:</label>
-          <div>
-            <div><input type='text' name='droneName' value={droneName} onChange={this.onDroneNameChange}></input></div>
-          </div>
+          <div className='icon'><FontAwesomeIcon icon='list-alt' size='2x'/></div>
+          <input type='text' name='droneName' value={droneName} 
+              onChange={this.onDroneNameChange}
+              placeholder='drone name'/>
         </div>
         <div className='new-command'>
-            <label htmlFor='newCommand'>New Command:</label>
-            <div>
-              <input type='text' name='newCommand' value={newCommand} 
-                onChange={this.onCommandChange}
-                onKeyDown={this.onCommandKeyDown}/>
-            </div>
+          <div className='icon'><FontAwesomeIcon icon='keyboard' size='2x'/></div>
+          <input type='text' name='newCommand' value={newCommand} 
+              onChange={this.onCommandChange}
+              onKeyDown={this.onCommandKeyDown}
+              placeholder='command e.g. place a,5,north' />
             {this.showErrorMessage()}
         </div>
         <div className='container'>

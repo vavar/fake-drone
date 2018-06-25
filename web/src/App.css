@@ -4,19 +4,39 @@
 
 .drone-name {
   display: flex;
+  align-content: center;
   margin: auto;
   padding: 10px;
   border-bottom: 1px solid #999;
 }
 
-.drone-name input[type="text"] {
+.icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  align-content: center;
+}
+
+.icon svg {
+  flex-grow: 1;
+}
+
+input[type="text"] {
   margin-left: 10px;
   font-size: 1.2em;
   padding: 5px;
-  width: 400px;
+  flex-grow: 1;
+  display: block;
+  margin-right: 10px;
   /* border: none; */
   border-radius: 0.4rem;
   box-sizing: border-box;
+}
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: rgb(204, 204, 204);
+  opacity: 1; /* Firefox */
 }
 
 .new-command {
@@ -26,15 +46,10 @@
   border-bottom: 1px solid #999;
 }
 
-.new-command input[type="text"] {
-  margin-left: 10px;
-  font-size: 1.2em;
-  padding: 5px;
-  width: 400px;
-  /* border: none; */
-  border-radius: 0.4rem;
-  box-sizing: border-box;
+.new-command label {
+  width: 200px;
 }
+
 .container {
   display: flex;
   flex-flow: row wrap;
@@ -44,5 +59,12 @@
 @media all and (min-width: 900px) {
   .container {
     width: 900px;
+  }
+}
+
+@media all and (max-width: 320px) {
+  input[type="text"] {
+    padding: 0px;
+    margin: 0px;
   }
 }
