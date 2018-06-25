@@ -11,8 +11,30 @@
 .drone-grid .col {
     width: 18%;
     height: 18%;
-    border: 1px solid;
+    border: 1px solid rgb(189, 188, 188);
+    background-color: #eee;
+    color: #666;
     font-weight: bold;
     text-align: center;
     flex: 0 0 auto;
+    display: flex;
+    flex-flow: column;
+}
+
+.drone-grid .col .col-label {
+    width: 100%;
+    text-align: right;
+    font-size: 0.2em;
+}
+
+.drone-grid .col .col-drone {
+    flex-grow: 1;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    align-content: center;
+}
+
+.drone-grid .col .col-drone svg {
+    flex-grow: 1;
 }

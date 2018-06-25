@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
 import _ from 'lodash';
 import queryString from 'query-string';
+import React, { Component } from 'react';
 import { Grid, CommandList } from './components';
+import { gridX, commands, directions, ENTER_KEY} from './constants';
 
 import { library } from '@fortawesome/fontawesome-svg-core' // eslint-disable-next-line
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' 
@@ -11,19 +12,23 @@ import './App.css';
 
 library.add(faPlane);
 
-const ENTER_KEY = 13;
-
 function isValidCommand(command) {
-  return _.includes(['PLACE','MOVE','LEFT','RIGHT'], command);
+  return _.includes(commands, command);
 }
 
 function getQueryString(params) {
   if (_.isEmpty(params)) {
-    return '';
+    return Promise.resolve('');
   }
 
-  const [x,y,f] = params.toLowerCase().split(',');
-  return `?${queryString.stringify({x,y,f})}`;
+  const [inputX,inputY,inputFace] = params.toLowerCase().split(',');
+  const x = _.indexOf(gridX, inputX);
+  const y = inputY - 1;
+  const f = _.indexOf(directions,inputFace)
+  if (x === -1 || y === -1 || f === -1) {
+    return Promise.reject(new Error('invalid argument for PLACE command'));
+  }
+  return Promise.resolve(`?${queryString.stringify({x,y,f})}`);
 }
 
 class App extends Component {
@@ -42,14 +47,27 @@ class App extends Component {
   }
 
   onDroneNameChange(event) {
-    this.setState({droneName: event.target.value.toUpperCase(), commands: []});
+    this.setState({droneName: event.target.value.toUpperCase(), commands: [], current: null});
   }
 
   onCommandChange(event) {
     this.setState({ newCommand: event.target.value.toUpperCase() });
   }
 
-  async onCommandKeyDown(event) {
+  componentDidMount() {
+    const { droneName } = this.state;
+    fetch(`/api/drone/${droneName.toLowerCase()}/status`)
+      .then(response => {
+        if (response.status === 200 ) {
+          return response.json().then(current => {
+            this.setState({current});
+          });
+        }
+      })
+      .catch(console.log);
+  }
+
+  onCommandKeyDown(event) {
     if (event.keyCode !== ENTER_KEY) {
         return;
     }
@@ -65,42 +83,55 @@ class App extends Component {
         return;
       }
 
-      const qs = getQueryString(params);
       const { droneName, commands } = this.state;
-      try {
-        const response = await fetch(`/api/drone/${droneName.toLowerCase()}/actions/${command.toLowerCase()}${qs}`);
-        if (response.status === 200 ) {
-          const current = await response.json();
-          commands.push(val);
-          this.setState({newCommand: '', commands, current});
-        }
-      }catch(err){
-        console.log(err);
-      }
+      getQueryString(params)
+        .then(qs => fetch(`/api/drone/${droneName.toLowerCase()}/actions/${command.toLowerCase()}${qs}`))
+        .then(response => {
+          if (response.status !== 200 ) {
+            this.setState({ errorMessage: 'failed to connect server' });
+          }
+          return response.json().then( current => {
+            commands.unshift(val);
+            this.setState({newCommand: '', commands, current, errorMessage: ''});
+          }).catch((err) => { 
+            console.log(err);
+            this.setState({ errorMessage: `Unavailable to process command: ${command}`});
+          });
+        }).catch(err => {
+          this.setState({ errorMessage: err.message });
+        });
     }
   }
 
+  showErrorMessage() {
+    const { errorMessage } = this.state;
+    if (!_.isEmpty(errorMessage)) {
+      return (<div><span>{errorMessage}</span></div>)
+    }
+  }
   render() {
-    const { droneName, commands, current, newCommand, errorMessage } = this.state;
+    const { droneName, commands, current, newCommand } = this.state;
     return (
       <div className='App'>
-        <div className='drone-name input-group'>
+        <div className='drone-name'>
           <label htmlFor='droneName'>Fake Drone Name:</label>
           <div>
             <div><input type='text' name='droneName' value={droneName} onChange={this.onDroneNameChange}></input></div>
           </div>
         </div>
-        <div className='new-command input-group'>
+        <div className='new-command'>
             <label htmlFor='newCommand'>New Command:</label>
             <div>
               <input type='text' name='newCommand' value={newCommand} 
                 onChange={this.onCommandChange}
                 onKeyDown={this.onCommandKeyDown}/>
-              <span>{errorMessage}</span>
             </div>
+            {this.showErrorMessage()}
         </div>
-        <Grid current={current}/>
-        <CommandList commands={commands}/>
+        <div className='container'>
+          <Grid current={current}/>
+          <CommandList commands={commands}/>
+        </div>
       </div>
     );
   }

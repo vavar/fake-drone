@@ -1,0 +1,10 @@
+rules:
+  global-require: 0
+  import/no-extraneous-dependencies: [error, { devDependencies: true }]
+  no-underscore-dangle: 0
+  no-unused-expressions: 0
+  no-unused-vars: 0
+  prefer-arrow-callback: 0
+  func-names: 0
+  space-before-function-paren: 0
+  max-len: 0

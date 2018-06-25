@@ -1,0 +1,31 @@
+.command-list.container {
+    width: 400px;
+    display: flex;
+    flex-flow: column;
+    padding: 5px;
+    margin: auto;
+};
+
+.command-list.container div {
+    width: 100%;
+}
+.command-list.container .title {
+    margin-bottom: 5px;
+    background-color: #b4e6fd;
+    border: 1px solid #2289ff;
+    border-radius: 3px;
+}
+
+.command-list.container .list {
+    overflow: scroll;
+    padding: 5px;
+    height: 400px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+.command-item {
+    background-color: #ced1d3;
+    border: 1px solid #99a4b1;
+    padding: 10px;
+    margin-bottom: 3px;
+}

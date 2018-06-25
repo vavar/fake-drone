@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ShortUniqueId from 'short-unique-id';
- 
+
+import './command-list.css';
+
 const uid = new ShortUniqueId();
 
 export class CommandList extends Component {
@@ -16,8 +18,11 @@ export class CommandList extends Component {
 
     render() {
         return (
-            <div className='command-list'>
-                {this.renderCommands()}
+            <div className='command-list container'>
+                <div className='title'><h3>Command History</h3></div>
+                <div className='list'>
+                    {this.renderCommands()}
+                </div>
             </div>
         );
     }

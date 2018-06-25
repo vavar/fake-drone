@@ -25,7 +25,7 @@ services:
     working_dir: /usr/src/app
     command: ["npm","run","docker"]
     depends_on:
-      - db-admin
+      - db
     ports: 
       - "8081:8081"
     networks:

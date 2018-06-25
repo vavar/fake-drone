@@ -1,23 +1,15 @@
 import React, { Component } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {gridX, gridY, cssDirections} from '../../constants';
 import './grid.css';
 
-const gridX = ['a','b','c','d','e'];
-const gridY = ['5','4','3','2','1'];
-const direction = [
-    270,
-    0,
-    90,
-    180,
-];
 
 export class Grid extends Component {
     renderDrone(showDrone, current) {
         if (!showDrone || !current) {
             return;
         }
-        const attr = direction[current.direction];
+        const attr = cssDirections[current.direction];
         return (
             <FontAwesomeIcon icon='plane' size='3x' transform={{ rotate: attr }}/>
         );
@@ -30,9 +22,9 @@ export class Grid extends Component {
             const droneYIndex = 4 - yindex;
             const showDrone = (droneVisible && current.x === droneXIndex && current.y === droneYIndex );
             return (
-                <div className='col' key={`${y}${x}`}>
-                    <div className='col-label'>{y}:{x.toUpperCase()}</div>
-                    {this.renderDrone(showDrone, current)}
+                <div className='col' key={`${x}${y}`}>
+                    <div className='col-label'>{x.toUpperCase()}:{y}</div>
+                    <div className='col-drone'>{this.renderDrone(showDrone, current)}</div>
                 </div>
             );
         }));

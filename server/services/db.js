@@ -1,7 +1,7 @@
 const Influx = require('influx');
 
-const database = process.env.DB_NAME;
-const host = process.env.DB_HOST;
+const database = process.env.DB_NAME || 'drone';
+const host = process.env.DB_HOST || 'db';
 
 const measurement = 'commands';
 const tags = ['drone'];
