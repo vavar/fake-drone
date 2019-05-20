@@ -1,6 +1,8 @@
 # Fake Drone Simulator
 Fake Drone is an application to simulate drone commands and display drone within 5x5 grid on web application
-This repository consists of 2 modules which is: 
+This repository consists of 2 modules which is:  
+
+![screenshot](doc/screenshot.png)
 
 ## Web
  - To display & command drone
