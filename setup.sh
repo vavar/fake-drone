@@ -6,6 +6,6 @@ for project in ${projects}
 do
     cd ${project}
     rm -rf node_modules
-    npm i
+    yarn install
     cd ..
 done
